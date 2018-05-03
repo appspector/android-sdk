@@ -61,6 +61,7 @@ public class AmazingApp extends Application {
             .build(this)
             .addPerformanceMonitor()
             .addHttpMonitor()
+            // If specific monitor is not added then this kind of data wont be tracked and available on the web
             .addLogMonitor()
             .addScreenshotMonitor()
             .addSQLMonitor()
