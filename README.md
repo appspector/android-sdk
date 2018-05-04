@@ -5,8 +5,6 @@ You can measure app performance, view database content, logs, network requests a
 This is the instrument that you've been looking for. Don't limit yourself only to simple logs. 
 Debugging doesn't have to be painful!
 
-[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk)
-
 # Setup
 
 ## 1. Create App
@@ -14,6 +12,8 @@ Each app you want to use with AppSpector SDK you have to register on the web (ht
 After adding the application navigate to app settings and copy API key.
 
 ## 2. Add AppSpector SDK to your build.gradle
+
+[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk)
 
 ```groovy
 buildscript {
@@ -24,7 +24,6 @@ buildscript {
   }
   
   dependencies {
-      // We recommend changing it to the latest version from our changelog: https://news.appspector.com
       classpath "com.appspector:android-sdk-plugin:latest_version"
   }
 }
@@ -40,7 +39,6 @@ repositories {
 }
 
 dependencies {
-    // We recommend changing it to the latest version from our changelog: https://news.appspector.com
     implementation "com.appspector:android-sdk:latest_version"
 }
 ```
