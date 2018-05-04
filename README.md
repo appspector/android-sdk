@@ -5,7 +5,7 @@ You can measure app performance, view database content, logs, network requests a
 This is the instrument that you've been looking for. Don't limit yourself only to simple logs. 
 Debugging doesn't have to be painful!
 
-![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)
+[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk)
 
 # Setup
 
