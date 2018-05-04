@@ -39,7 +39,7 @@ repositories {
 dependencies {
     // We recommend changing it to the latest version from our changelog:
     // https://news.appspector.com
-    classpath "com.appspector:android-sdk:latest_version"
+    implementation "com.appspector:android-sdk:latest_version"
 }
 ```
 
