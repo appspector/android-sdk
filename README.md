@@ -75,8 +75,6 @@ public class AmazingApp extends Application {
 
 Build your project and see everything work! When your app is up and running you can go to https://app.appspector.com and connect to your application session.
 
-[Join our slack to discuss setup process and features](https://slack.appspector.com)
-
 # Features
 AppSpector provides many monitors that tracks different activities inside your app:
 
