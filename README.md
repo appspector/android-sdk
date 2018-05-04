@@ -3,7 +3,7 @@
 With AppSpector you can remotely debug your app running in the same room or on another continent. 
 You can measure app performance, view database content, logs, network requests and many more in realtime. 
 This is the instrument that you've been looking for. Don't limit yourself only to simple logs. 
-Debugging don't have to be painful!
+Debugging doesn't have to be painful!
 
 ## Setup
 Each app you want to use with AppSpector SDK you have to register on the web (https://app.appspector.com).
