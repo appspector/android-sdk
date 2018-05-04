@@ -20,8 +20,7 @@ buildscript {
   }
   
   dependencies {
-      // We recommend changing it to the latest version from our changelog:
-      // https://news.appspector.com
+      // We recommend changing it to the latest version from our changelog: https://news.appspector.com
       classpath "com.appspector:android-sdk-plugin:latest_version"
   }
 }
@@ -37,8 +36,7 @@ repositories {
 }
 
 dependencies {
-    // We recommend changing it to the latest version from our changelog:
-    // https://news.appspector.com
+    // We recommend changing it to the latest version from our changelog: https://news.appspector.com
     implementation "com.appspector:android-sdk:latest_version"
 }
 ```
