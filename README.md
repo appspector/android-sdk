@@ -66,7 +66,7 @@ public class AmazingApp extends Application {
             .addLogMonitor()
             .addScreenshotMonitor()
             .addSQLMonitor()
-            .run("#APP_API_KEY#");
+            .run("API_KEY");
    }
 
 }
