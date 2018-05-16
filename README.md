@@ -58,6 +58,14 @@ public class AmazingApp extends Application {
       super.onCreate();
       
       // We recommend to start AppSpector from Application#onCreate method
+      
+      // You can start all monitors
+      AppSpector
+            .build(this)
+            .withDefaultMonitors()            
+            .run("API_KEY");
+            
+      // Or you can select monitors that you want to use
       AppSpector
             .build(this)
             .addPerformanceMonitor()
