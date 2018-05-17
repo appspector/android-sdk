@@ -24,7 +24,7 @@ buildscript {
   }
   
   dependencies {
-      classpath "com.appspector:android-sdk-plugin:latest_version"
+      classpath "com.appspector:android-sdk-plugin:+"
   }
 }
 
@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.appspector:android-sdk:latest_version"
+    implementation "com.appspector:android-sdk:+"
 }
 ```
 <!-- integration-manual-end -->
