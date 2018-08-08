@@ -115,6 +115,8 @@ Displays real-time graphs of the CPU / Memory / Network / Disk / Battery usage.
 #### Screenshot monitor
 Simply captures screenshot from the device.
 
+![Screenshots](screenshots/screenshot_monitor.png)
+
 # Feedback
 Let us know what do you think or what would you like to be improved: [info@appspector.com](mailto:info@appspector.com).
 
