@@ -112,17 +112,12 @@ Most of the apps are location-aware. Testing it requires changing locations your
 #### Performance monitor
 Displays real-time graphs of the CPU / Memory / Network / Disk / Battery usage.
 
-![Screenshots](images/performance-monitor.png)
+![Performance](images/performance-monitor.png)
 
 #### Screenshot monitor
 Simply captures screenshot from the device.
 
-![Performance](images/screenshot-monitor.png)
-
-#### Screenshot monitor
-Simply captures screenshot from the device.
-
-![Performance](images/screenshot-monitor.png)
+![Screenshots](images/screenshot-monitor.png)
 
 # Feedback
 Let us know what do you think or what would you like to be improved: [info@appspector.com](mailto:info@appspector.com).
