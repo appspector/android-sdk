@@ -19,6 +19,8 @@ After adding the application navigate to app settings and copy API key.
 buildscript {
   repositories {
       maven {
+          jcenter()
+          google()
           url "https://maven.appspector.com/artifactory/android-sdk"
       }
   }
