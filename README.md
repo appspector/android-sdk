@@ -13,7 +13,7 @@ After adding the application navigate to app settings and copy API key.
 
 ## 2. Add AppSpector SDK to your build.gradle
 <!-- integration-manual-start -->
-[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk)
+[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk){:target="_blank"}
 
 ```groovy
 buildscript {
