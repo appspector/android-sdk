@@ -83,6 +83,18 @@ public class AmazingApp extends Application {
 ```
 <!-- initialization-manual-end -->
 
+### Custom device name
+
+You can assign a custom name to your device to easily find needed sessions in the sessions list. To do this you have to add the desired name as a value for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
+
+```java
+AppSpector
+            .build(this)
+            .withDefaultMonitors()
+            .addMetadata(AppSpector.METADATA_KEY_DEVICE_NAME, "YOUR_DEVICE_NAME")
+            .run("YOUR_API_KEY");
+```
+
 ## 4. Build and Run
 
 Build your project and see everything work! When your app is up and running you can go to https://app.appspector.com and connect to your application session.
