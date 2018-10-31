@@ -18,9 +18,9 @@ After adding the application navigate to app settings and copy API key.
 ```groovy
 buildscript {
   repositories {
+      jcenter()
+      google()
       maven {
-          jcenter()
-          google()
           url "https://maven.appspector.com/artifactory/android-sdk"
       }
   }
