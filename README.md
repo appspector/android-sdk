@@ -26,7 +26,7 @@ buildscript {
   }
   
   dependencies {
-      classpath "com.appspector:android-sdk-plugin:1.0.4"
+      classpath "com.appspector:android-sdk-plugin:1.0.6"
   }
 }
 
@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.appspector:android-sdk:1.0.4"
+    implementation "com.appspector:android-sdk:1.0.6"
 }
 ```
 <!-- integration-manual-end -->
@@ -82,6 +82,18 @@ public class AmazingApp extends Application {
 }
 ```
 <!-- initialization-manual-end -->
+
+### Custom device name
+
+You can assign a custom name to your device to easily find needed sessions in the sessions list. To do this you have to add the desired name as a value for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
+
+```java
+AppSpector
+            .build(this)
+            .withDefaultMonitors()
+            .addMetadata(AppSpector.METADATA_KEY_DEVICE_NAME, "YOUR_DEVICE_NAME")
+            .run("YOUR_API_KEY");
+```
 
 ## 4. Build and Run
 
