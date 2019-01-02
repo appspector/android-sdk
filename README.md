@@ -149,7 +149,7 @@ public class TokenFilter implements HTTPFilter {
 }
 ```
 
-And here, for example, we want to replace a log level to WARN for all messages with word *token*: 
+And here, for example, we want to change a log level to WARN for all messages with word *token*: 
 ```java
 public class LogFilter implements Filter {
   
