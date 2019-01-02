@@ -5,13 +5,22 @@ You can measure app performance, view database content, logs, network requests a
 This is the instrument that you've been looking for. Don't limit yourself only to simple logs. 
 Debugging doesn't have to be painful!
 
-# Setup
+* [Installation](#installation)
+  * [Gradle dependency](#add-appspector-sdk-to-your-buildgradle)
+  * [Initialize AppSpector](#initialize-appspector-sdk)
+  * [Build and Run](#build-and-run)
+* [Configure](#configure)
+  * [SDK start/stop](#sdk-startstop)
+  * [Custom device name](#custom-device-name)
+  * [Getting session URL](#getting-session-url)
+* [Features](#features)
 
-## 1. Create App
+# Installation
+
 Each app you want to use with AppSpector SDK you have to register on the web (https://app.appspector.com).
 After adding the application navigate to app settings and copy API key.
 
-## 2. Add AppSpector SDK to your build.gradle
+## Add AppSpector SDK to your build.gradle
 <!-- integration-manual-start -->
 [![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk)
 
@@ -46,7 +55,7 @@ dependencies {
 ```
 <!-- integration-manual-end -->
 
-## 3. Initialize AppSpector SDK
+## Initialize AppSpector SDK
 <!-- initialization-manual-start -->
 ```java
 import android.app.Application;
@@ -83,7 +92,28 @@ public class AmazingApp extends Application {
 ```
 <!-- initialization-manual-end -->
 
-### Custom device name
+## Build and Run
+
+Build your project and see everything work! When your app is up and running you can go to https://app.appspector.com and connect to your application session.
+
+
+# Configure
+
+## SDK start/stop
+
+AppSpector start is two step process.
+When you link with AppSpector framework it starts to collect data immediately after load. When you call `run` method - AppSpector opens a connection to the backend and from that point you can see your session on the frontend.
+
+You can manually control AppSpector state by calling `start` and `stop` methods.
+`stop` tells AppSpector to disable all data collection and close current session.
+`start` starts it again using config you provided at load. This will be a new session, all activity between `stop` and `start` calls will not be tracked.
+
+```java
+AppSpector.shared().stop();
+AppSpector.shared().start();
+```
+
+## Custom device name
 
 You can assign a custom name to your device to easily find needed sessions in the sessions list. To do this you have to add the desired name as a value for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
 
@@ -95,9 +125,18 @@ AppSpector
             .run("YOUR_API_KEY");
 ```
 
-## 4. Build and Run
+## Getting session URL
 
-Build your project and see everything work! When your app is up and running you can go to https://app.appspector.com and connect to your application session.
+Sometimes you may need to get URL pointing to current session from code. Say you want link crash in your crash reporter with it, write it to logs or display in your debug UI. To get this URL you have to add a session start callback:
+
+```java
+AppSpector.shared().setSessionUrlListener(new SessionUrlListener() {
+    @Override
+    public void onReceived(@NonNull String sessionUrl) {
+        // Save url for future use...
+    }
+});
+```
 
 # Features
 AppSpector provides many monitors that tracks different activities inside your app:
