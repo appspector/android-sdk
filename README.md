@@ -12,6 +12,7 @@ Debugging doesn't have to be painful!
 * [Configure](#configure)
   * [SDK start/stop](#sdk-startstop)
   * [Custom device name](#custom-device-name)
+  * [Filtering your data](#filtering-your-data)
   * [Getting session URL](#getting-session-url)
 * [Features](#features)
 
@@ -122,6 +123,53 @@ AppSpector
             .build(this)
             .withDefaultMonitors()
             .addMetadata(AppSpector.METADATA_KEY_DEVICE_NAME, "YOUR_DEVICE_NAME")
+            .run("YOUR_API_KEY");
+```
+## Filtering your data
+
+Sometimes you may want to adjust or completely skip some pieces of data AppSpector gather. We have a special feature called Sanitizing for this, for now it’s available only for HTTP and logs monitors, more coming. For these two monitors you can provide a filter which allows to modify or block events before AppSpector sends them to the backend. You can specify filters via `addHttpMonitor(HTTPFilter)` and `addLogMonitor(LogMonitor.Filter)` methods.
+
+Some examples. Let's say we want to skip our auth token from requests headers:
+```java
+public class TokenFilter implements HTTPFilter {
+    @Nullable
+    @Override
+    public HttpRequest filter(HttpRequest request) {
+        if (request.getHeaders().containsKey("YOUR-AUTH-HEADER")) {
+             request.getHeaders().remove("YOUR-AUTH-HEADER");
+        }
+        return request;
+    }
+
+    @Nullable
+    @Override
+    public HttpResponse filter(HttpResponse response) {
+        return response;
+    }
+}
+```
+
+And here, for example, we want to replace a log level to WARN for all messages with word *token*: 
+```java
+public class LogFilter implements Filter {
+  
+    @Nullable
+    @Override
+    public LogEvent filter(LogEvent event) {
+        if (event.message.contains("token")) {
+             event.level = LogLevel.WARN;
+        }
+        return request;
+    }
+}
+```
+Let's provide them to monitors:
+```java
+AppSpector
+            .build(this)
+            .withDefaultMonitors()
+            .addLogMonitor(new LogFilter())
+            .addHttpMonitor(new TokenFilter())
             .run("YOUR_API_KEY");
 ```
 
