@@ -40,4 +40,4 @@
 -keepnames class com.fasterxml.jackson.** { *; }
 -dontwarn com.fasterxml.jackson.databind.**
 
-# Also you should provide rules for okhttp
+-keepnames class com.google.android.gms.location.LocationServices
