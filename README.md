@@ -1,4 +1,4 @@
-# ![AppSpector](https://github.com/appspector/ios-sdk/raw/master/github-cover.png)
+# [![AppSpector](images/github-cover.png)](https://appspector.com?utm_source=android_readme)
 
 With AppSpector you can remotely debug your app running in the same room or on another continent. 
 You can measure app performance, view database content, logs, network requests and many more in realtime. 
@@ -14,16 +14,17 @@ Debugging doesn't have to be painful!
   * [Custom device name](#custom-device-name)
   * [Filtering your data](#filtering-your-data)
   * [Getting session URL](#getting-session-url)
+  * [Disable background data collection](#disable-background-data-collection)
 * [Features](#features)
 
 # Installation
 
-Each app you want to use with AppSpector SDK you have to register on the web (https://app.appspector.com).
+Each app you want to use with AppSpector SDK you have to register on the web ([https://app.appspector.com](https://app.appspector.com?utm_source=android_readme)).
 After adding the application navigate to app settings and copy API key.
 
 ## Add AppSpector SDK to your build.gradle
 <!-- integration-manual-start -->
-[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk)
+[![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk/releases)
 
 ```groovy
 buildscript {
@@ -36,7 +37,7 @@ buildscript {
   }
   
   dependencies {
-      classpath "com.appspector:android-sdk-plugin:$lastVersion"
+      classpath "com.appspector:android-sdk-plugin:1.+"
   }
 }
 
@@ -51,7 +52,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.appspector:android-sdk:$lastVersion"
+    implementation "com.appspector:android-sdk:1.+"
 }
 ```
 <!-- integration-manual-end -->
@@ -95,7 +96,7 @@ public class AmazingApp extends Application {
 
 ## Build and Run
 
-Build your project and see everything work! When your app is up and running you can go to https://app.appspector.com and connect to your application session.
+Build your project and see everything work! When your app is up and running you can go to [https://app.appspector.com](https://app.appspector.com?utm_source=android_readme) and connect to your application session.
 
 
 # Configure
@@ -125,6 +126,7 @@ AppSpector
             .addMetadata(AppSpector.METADATA_KEY_DEVICE_NAME, "YOUR_DEVICE_NAME")
             .run("YOUR_API_KEY");
 ```
+
 ## Filtering your data
 
 Sometimes you may want to adjust or completely skip some pieces of data AppSpector gather. We have a special feature called Sanitizing for this, for now it’s available only for HTTP and logs monitors, more coming. For these two monitors you can provide a filter which allows to modify or block events before AppSpector sends them to the backend. You can specify filters via `addHttpMonitor(HTTPFilter)` and `addLogMonitor(LogMonitor.Filter)` methods.
@@ -185,6 +187,20 @@ AppSpector.shared().setSessionUrlListener(new SessionUrlListener() {
     }
 });
 ```
+
+## Disable background data collection
+By default AppSpector SDK is active until application is killed by Android OS, even if no activities left. 
+It may lead to unnecessary data collection and long sessions for inactive apps.
+We provide API to disable data collection for case when app has no started activities.
+
+```java
+AppSpector
+        .build(this)
+        .collectDataInBackground(false) // Set this flag to disable data collection if no activities left
+        .withDefaultMonitors()
+        .run("YOUR_API_KEY");
+```
+
 
 # Features
 AppSpector provides many monitors that tracks different activities inside your app:
