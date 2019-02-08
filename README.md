@@ -189,9 +189,9 @@ AppSpector.shared().setSessionUrlListener(new SessionUrlListener() {
 ```
 
 ## Disable background data collection
-By default AppSpector SDK is active until application is killed by Android OS, even if no activities left. 
+By default, AppSpector SDK is active until the application is killed by Android OS, even if no activities left. 
 It may lead to unnecessary data collection and long sessions for inactive apps.
-We provide API to disable data collection for case when app has no started activities.
+We provide API to disable data collection for a case when the app has no started activities.
 
 ```java
 AppSpector
@@ -199,6 +199,16 @@ AppSpector
         .collectDataInBackground(false) // Set this flag to disable data collection if no activities left
         .withDefaultMonitors()
         .run("YOUR_API_KEY");
+```
+
+## Using OkHttp interceptor instead of AppSpector Gradle Plugin
+If you don't want to use AppSpector Gradle Plugin you could use an alternative way to intercept HTTP requests and responses. You can manually add `AppSpectorOkHttp3Interceptor` to your OkHttpClient (Or `AppSpectorOkHttp2Interceptor` for old version of OkHttpClient). Also, **don't forget** to remove AppSpector plugin from your `app/build.gradle` file.
+
+```java
+new OkHttpClient.Builder()
+  .addInterceptor(new AuthenticationInterceptor()) // for example, it adds auth token to you request
+  .addInterceptor(new AppSpectorOkHttp3Interceptor()) // it will track your requests and responses
+  .build()
 ```
 
 
