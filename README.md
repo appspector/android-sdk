@@ -15,6 +15,7 @@ Debugging doesn't have to be painful!
   * [Filtering your data](#filtering-your-data)
   * [Getting session URL](#getting-session-url)
   * [Disable background data collection](#disable-background-data-collection)
+  * [Using OkHttp interceptor instead of AppSpector Gradle Plugin](#using-okhttp-interceptor-instead-of-appspector-gradle-plugin)
 * [Features](#features)
 
 # Installation
