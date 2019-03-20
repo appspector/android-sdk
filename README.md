@@ -6,7 +6,7 @@ This is the instrument that you've been looking for. Don't limit yourself only t
 Debugging doesn't have to be painful!
 
 * [Installation](#installation)
-  * [Gradle dependency](#add-appspector-sdk-to-your-buildgradle)
+  * [Gradle dependency](#add-appspector-sdk-to-your-project)
   * [Initialize AppSpector](#initialize-appspector-sdk)
   * [Build and Run](#build-and-run)
 * [Configure](#configure)
@@ -23,10 +23,11 @@ Debugging doesn't have to be painful!
 Each app you want to use with AppSpector SDK you have to register on the web ([https://app.appspector.com](https://app.appspector.com?utm_source=android_readme)).
 After adding the application navigate to app settings and copy API key.
 
-## Add AppSpector SDK to your build.gradle
+## Add AppSpector SDK to your project
 <!-- integration-manual-start -->
 [![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk/releases)
 
+#### Add AppSpector dependency to buildscript in your project-level build.gradle
 ```groovy
 buildscript {
   repositories {
@@ -41,11 +42,15 @@ buildscript {
       classpath "com.appspector:android-sdk-plugin:1.+"
   }
 }
+```
 
+#### Modify your app-level build.gradle
+```groovy
 apply plugin: 'com.android.application'
 // Put AppSpector plugin after Android plugin
 apply plugin: 'com.appspector.sdk'
 
+// Add AppSpector maven repository
 repositories {
     maven {
         url "https://maven.appspector.com/artifactory/android-sdk"
@@ -54,6 +59,14 @@ repositories {
 
 dependencies {
     implementation "com.appspector:android-sdk:1.+"
+}
+```
+
+In case when you don't want to have AppSpector SDK in your release APK use AppSpector NO-OP artifact
+```groovy
+dependencies {
+    debugImplementation "com.appspector:android-sdk:1.+"
+    releaseImplementation "com.appspector:android-sdk-noop:1.+"
 }
 ```
 <!-- integration-manual-end -->
