@@ -21,7 +21,9 @@ Debugging doesn't have to be painful!
 
 # Installation
 
-Each app you want to use with AppSpector SDK you have to register on the web ([https://app.appspector.com](https://app.appspector.com?utm_source=android_readme)).
+Each app you want to use with AppSpector SDK you have to register on our
+service through the web ([https://app.appspector.com](https://app.appspector.com?utm_source=android_readme))
+or the [desktop app](https://appspector.com/download/?utm_source=android_readme).
 After adding the application navigate to app settings and copy API key.
 
 ## Add AppSpector SDK to your project
@@ -52,14 +54,10 @@ apply plugin: 'com.appspector.sdk'
 // Add AppSpector maven repository
 repositories {
     maven { url "https://maven.appspector.com/artifactory/android-sdk" }
-    // If you're not going to use E2E Encryption, don't put next line to your project
-    maven { url "https://dl.bintray.com/cossacklabs/maven/" }
 }
 
 dependencies {
     implementation "com.appspector:android-sdk:1.+"
-    // If you're not going to use E2E Encryption, don't put next line to your project
-    implementation 'com.appspector:android-sdk-encryption:1.+'
 }
 ```
 
@@ -67,9 +65,6 @@ In case when you don't want to have AppSpector SDK in your release APK use AppSp
 ```groovy
 dependencies {
     debugImplementation "com.appspector:android-sdk:1.+"
-    // If you're not going to use E2E Encryption, don't put next line to your project
-    debugImplementation 'com.appspector:android-sdk-encryption:1.+'
-    
     releaseImplementation "com.appspector:android-sdk-noop:1.+"
 }
 ```
@@ -113,14 +108,34 @@ public class AmazingApp extends Application {
 <!-- initialization-manual-end -->
 
 
-## Use End-To-End Encryption to protect your data
+## Use End-To-End encryption to protect your data
 
-Currently, E2E Encryption is supported only by our [desktop application](https://appspector.com/download/?utm_source=android_readme).
+Currently, E2E encryption is supported only by our [desktop application](https://appspector.com/download/?utm_source=android_readme).
 
-To use encryption you must select 'Enable End-To-End encryption' option
-during the registration of your app via [AppSpector desktop application](https://appspector.com/download/?utm_source=android_readme)
+To use encryption you must select the 'Enable End-To-End encryption' option
+during the registration of your app using [AppSpector desktop application](https://appspector.com/download/?utm_source=android_readme)
 (previously registered application can't be updated to support encryption).
-After that, enable encryption by putting `enableEncryption` to SDK
+
+After that, you need to add the `android-sdk-encryption` module to your
+dependencies declaration. So, your app-level `build.gradle` will look like this:
+
+```groovy
+apply plugin: 'com.android.application'
+// Put AppSpector plugin after Android plugin
+apply plugin: 'com.appspector.sdk'
+
+// Add AppSpector maven repository
+repositories {
+    maven { url "https://maven.appspector.com/artifactory/android-sdk" }
+}
+
+dependencies {
+    implementation "com.appspector:android-sdk:1.+"
+    implementation 'com.appspector:android-sdk-encryption:1.+'
+}
+```
+
+Finally, enable encryption by putting the `enableEncryption` to SDK
 configuration. The client `Public Key` you can find on the application settings screen.
 
 <!-- e2e-start -->
@@ -144,21 +159,42 @@ Build your project and see everything work! When your app is up and running you 
 
 ## SDK start/stop
 
-AppSpector start is two step process.
-When you link with AppSpector framework it starts to collect data immediately after load. When you call `run` method - AppSpector opens a connection to the backend and from that point you can see your session on the frontend.
+After you call the `run` method SDK starts data collection and tries to
+establish connection with web service and from that point you can see
+your session on the frontend.
 
-You can manually control AppSpector state by calling `start` and `stop` methods.
-`stop` tells AppSpector to disable all data collection and close current session.
-`start` starts it again using config you provided at load. This will be a new session, all activity between `stop` and `start` calls will not be tracked.
+Since we recommend to keep SDK initialization in the `onCreate()` method
+of your [Application](https://developer.android.com/reference/android/app/Application),
+the SDK provides methods to help you manually control AppSpector state by
+calling `stop()` and `start()` methods.
+You are able to use these methods only after AppSpector was initialized.
+
+The `stop()` tells AppSpector to disable all data collection and close current session.
 
 ```java
 AppSpector.shared().stop();
+```
+
+The `start()` starts it again using config you provided at load.
+
+```java
 AppSpector.shared().start();
+```
+
+**As the result new session session will be created and all activity between
+`stop()` and `start()` calls will not be tracked.**
+
+To check AppSpector state you can use `isStarted()` method.
+
+```java
+AppSpector.shared().isStarted();
 ```
 
 ## Custom device name
 
-You can assign a custom name to your device to easily find needed sessions in the sessions list. To do this you have to add the desired name as a value for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
+You can assign a custom name to your device to easily find needed sessions
+in the sessions list. To do this you have to add the desired name as a value
+for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
 
 ```java
 AppSpector
@@ -166,6 +202,20 @@ AppSpector
             .withDefaultMonitors()
             .addMetadata(AppSpector.METADATA_KEY_DEVICE_NAME, "YOUR_DEVICE_NAME")
             .run("YOUR_API_KEY");
+```
+
+Also, the SDK allows managing the device name during application lifetime using
+
+the `setMetadataValue` method to change device name
+
+```java
+AppSpector.shared().setMetadataValue(AppSpector.METADATA_KEY_DEVICE_NAME, "NEW_DEVICE_NAME");
+```
+
+or the `removeMetadataValue` to remove your custom device name
+
+```java
+AppSpector.shared().removeMetadataValue(AppSpector.METADATA_KEY_DEVICE_NAME);
 ```
 
 ## Filtering your data
