@@ -117,7 +117,7 @@ you to encrypt all data AppSpector sends from or to your device and be sure
 only you can decrypt it. Due to security reasons encrypted sessions are only
 available in [desktop application](https://appspector.com/download/?utm_source=android_readme).
 
-To use encryption you must select the 'Enable End-To-End encryption' option
+To use encryption you must select the `Enable End-To-End encryption` option
 during the registration of your app using [desktop application](https://appspector.com/download/?utm_source=android_readme)
 (previously registered application can't be updated to support encryption).
 
