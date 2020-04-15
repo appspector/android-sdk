@@ -112,7 +112,7 @@ public class AmazingApp extends Application {
 
 AppSpector SDK collects and stores user data including logs, database content
 and network traffic. All of this can contain sensitive data so to protect
-your privacy we offer separate build of the SDK with E2EE feature. It allows
+your privacy we offer an additional module with E2EE feature. It allows
 you to encrypt all data AppSpector sends from or to your device and be sure
 only you can decrypt it. Due to security reasons encrypted sessions are only
 available in [desktop application](https://appspector.com/download/?utm_source=android_readme).
