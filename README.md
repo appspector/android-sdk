@@ -1,13 +1,14 @@
 # [![AppSpector](images/github-cover.png)](https://appspector.com?utm_source=android_readme)
 
-With AppSpector you can remotely debug your app running in the same room or on another continent. 
-You can measure app performance, view database content, logs, network requests and many more in realtime. 
-This is the instrument that you've been looking for. Don't limit yourself only to simple logs. 
+With AppSpector you can remotely debug your app running in the same room or on another continent.
+You can measure app performance, view database content, logs, network requests and many more in realtime.
+This is the instrument that you've been looking for. Don't limit yourself only to simple logs.
 Debugging doesn't have to be painful!
 
 * [Installation](#installation)
   * [Gradle dependency](#add-appspector-sdk-to-your-project)
   * [Initialize AppSpector](#initialize-appspector-sdk)
+  * [Use End-To-End Encryption to protect your data](#use-end-to-end-encryption-to-protect-your-data)
   * [Build and Run](#build-and-run)
 * [Configure](#configure)
   * [SDK start/stop](#sdk-startstop)
@@ -20,7 +21,9 @@ Debugging doesn't have to be painful!
 
 # Installation
 
-Each app you want to use with AppSpector SDK you have to register on the web ([https://app.appspector.com](https://app.appspector.com?utm_source=android_readme)).
+Each app you want to use with AppSpector SDK you have to register on our
+service through the web ([https://app.appspector.com](https://app.appspector.com?utm_source=android_readme))
+or the [desktop app](https://appspector.com/download/?utm_source=android_readme).
 After adding the application navigate to app settings and copy API key.
 
 ## Add AppSpector SDK to your project
@@ -33,9 +36,7 @@ buildscript {
   repositories {
       jcenter()
       google()
-      maven {
-          url "https://maven.appspector.com/artifactory/android-sdk"
-      }
+      maven { url "https://maven.appspector.com/artifactory/android-sdk" }
   }
   
   dependencies {
@@ -52,9 +53,7 @@ apply plugin: 'com.appspector.sdk'
 
 // Add AppSpector maven repository
 repositories {
-    maven {
-        url "https://maven.appspector.com/artifactory/android-sdk"
-    }
+    maven { url "https://maven.appspector.com/artifactory/android-sdk" }
 }
 
 dependencies {
@@ -108,6 +107,54 @@ public class AmazingApp extends Application {
 ```
 <!-- initialization-manual-end -->
 
+
+## Use End-To-End encryption to protect your data
+
+AppSpector SDK collects and stores user data including logs, database content
+and network traffic. All of this can contain sensitive data so to protect
+your privacy we offer an additional module with E2EE feature. It allows
+you to encrypt all data AppSpector sends from or to your device and be sure
+only you can decrypt it. Due to security reasons encrypted sessions are only
+available in [desktop application](https://appspector.com/download/?utm_source=android_readme).
+
+To use encryption you must select the `Enable End-To-End encryption` option
+during the registration of your app using [desktop application](https://appspector.com/download/?utm_source=android_readme)
+(previously registered application can't be updated to support encryption).
+
+After that, you need to add the `android-sdk-encryption` module to your
+dependencies declaration. So, your app-level `build.gradle` should contain the next lines:
+
+```groovy
+apply plugin: 'com.android.application'
+// Put AppSpector plugin after Android plugin
+apply plugin: 'com.appspector.sdk'
+
+// Add AppSpector maven repository
+repositories {
+    maven { url "https://maven.appspector.com/artifactory/android-sdk" }
+}
+
+dependencies {
+    implementation "com.appspector:android-sdk:1.+"
+    implementation 'com.appspector:android-sdk-encryption:1.+'
+}
+```
+
+Finally, enable encryption by putting the `enableEncryption` to SDK
+configuration. The client `Public Key` you can find on the application settings screen.
+
+<!-- e2e-start -->
+```java
+AppSpector
+            .build(this)
+            .withDefaultMonitors() 
+            .enableEncryption("CLIENT_PUBLIC_KEY")
+            .run("API_KEY");
+```
+
+<!-- e2e-end -->
+
+
 ## Build and Run
 
 Build your project and see everything work! When your app is up and running you can go to [https://app.appspector.com](https://app.appspector.com?utm_source=android_readme) and connect to your application session.
@@ -117,21 +164,42 @@ Build your project and see everything work! When your app is up and running you 
 
 ## SDK start/stop
 
-AppSpector start is two step process.
-When you link with AppSpector framework it starts to collect data immediately after load. When you call `run` method - AppSpector opens a connection to the backend and from that point you can see your session on the frontend.
+After calling the `run` method the SDK starts data collection and
+data transferring to the web service. From that point you can see
+your session in the AppSpector client.
 
-You can manually control AppSpector state by calling `start` and `stop` methods.
-`stop` tells AppSpector to disable all data collection and close current session.
-`start` starts it again using config you provided at load. This will be a new session, all activity between `stop` and `start` calls will not be tracked.
+Since we recommend to keep SDK initialization in the `onCreate()` method
+of your [Application](https://developer.android.com/reference/android/app/Application),
+the SDK provides methods to help you control AppSpector state by
+calling `stop()` and `start()` methods.
+**You are able to use these methods only after AppSpector was initialized.**
+
+The `stop()` tells AppSpector to disable all data collection and close current session.
 
 ```java
 AppSpector.shared().stop();
+```
+
+The `start()` starts it again using config you provided at initialization.
+
+```java
 AppSpector.shared().start();
+```
+
+**As the result new session will be created and all activity between
+`stop()` and `start()` calls will not be tracked.**
+
+To check AppSpector state you can use `isStarted()` method.
+
+```java
+AppSpector.shared().isStarted();
 ```
 
 ## Custom device name
 
-You can assign a custom name to your device to easily find needed sessions in the sessions list. To do this you have to add the desired name as a value for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
+You can assign a custom name to your device to easily find needed sessions
+in the sessions list. To do this you should add the desired name as a value
+for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
 
 ```java
 AppSpector
@@ -139,6 +207,20 @@ AppSpector
             .withDefaultMonitors()
             .addMetadata(AppSpector.METADATA_KEY_DEVICE_NAME, "YOUR_DEVICE_NAME")
             .run("YOUR_API_KEY");
+```
+
+Also, the SDK allows managing the device name during application lifetime using
+
+the `setMetadataValue` method to change device name
+
+```java
+AppSpector.shared().setMetadataValue(AppSpector.METADATA_KEY_DEVICE_NAME, "NEW_DEVICE_NAME");
+```
+
+or the `removeMetadataValue` to remove your custom device name
+
+```java
+AppSpector.shared().removeMetadataValue(AppSpector.METADATA_KEY_DEVICE_NAME);
 ```
 
 ## Filtering your data
@@ -165,7 +247,7 @@ public class TokenFilter implements HTTPFilter {
 }
 ```
 
-And here, for example, we want to change a log level to WARN for all messages with word *token*: 
+And here, for example, we want to change a log level to WARN for all messages with word *token*:
 ```java
 public class LogFilter implements Filter {
   
@@ -203,7 +285,7 @@ AppSpector.shared().setSessionUrlListener(new SessionUrlListener() {
 ```
 
 ## Disable background data collection
-By default, AppSpector SDK is active until the application is killed by Android OS, even if no activities left. 
+By default, AppSpector SDK is active until the application is killed by Android OS, even if no activities left.
 It may lead to unnecessary data collection and long sessions for inactive apps.
 We provide API to disable data collection for a case when the app has no started activities.
 
@@ -258,7 +340,7 @@ Displays all logs generated by your app.
 ##### AppSpector Logger
 AppSpector Logger allows you to collect log message only into AppSpector service. It is useful when you log some internal data witch can be leaked via Logcat. AppSpector Logger has the same API with `android.util.Log` class.
 
-```java 
+```java
 Logger.d("MyTAG", "It won't be printed to the Logcat");
 ```
 
