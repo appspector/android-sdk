@@ -110,10 +110,15 @@ public class AmazingApp extends Application {
 
 ## Use End-To-End encryption to protect your data
 
-Currently, E2E encryption is supported only by our [desktop application](https://appspector.com/download/?utm_source=android_readme).
+AppSpector SDK collects and stores user data including logs, database content
+and network traffic. All of this can contain sensitive data so to protect
+your privacy we offer separate build of the SDK with E2EE feature. It allows
+you to encrypt all data AppSpector sends from or to your device and be sure
+only you can decrypt it. Due to security reasons encrypted sessions are only
+available in [desktop application](https://appspector.com/download/?utm_source=android_readme).
 
 To use encryption you must select the 'Enable End-To-End encryption' option
-during the registration of your app using [AppSpector desktop application](https://appspector.com/download/?utm_source=android_readme)
+during the registration of your app using [desktop application](https://appspector.com/download/?utm_source=android_readme)
 (previously registered application can't be updated to support encryption).
 
 After that, you need to add the `android-sdk-encryption` module to your
@@ -159,15 +164,15 @@ Build your project and see everything work! When your app is up and running you 
 
 ## SDK start/stop
 
-After you call the `run` method SDK starts data collection and tries to
-establish connection with web service and from that point you can see
-your session on the frontend.
+After calling the `run` method the SDK starts data collection and
+data transferring to the web service. From that point you can see
+your session in the AppSpector client.
 
 Since we recommend to keep SDK initialization in the `onCreate()` method
 of your [Application](https://developer.android.com/reference/android/app/Application),
-the SDK provides methods to help you manually control AppSpector state by
+the SDK provides methods to help you control AppSpector state by
 calling `stop()` and `start()` methods.
-You are able to use these methods only after AppSpector was initialized.
+**You are able to use these methods only after AppSpector was initialized.**
 
 The `stop()` tells AppSpector to disable all data collection and close current session.
 
@@ -175,13 +180,13 @@ The `stop()` tells AppSpector to disable all data collection and close current s
 AppSpector.shared().stop();
 ```
 
-The `start()` starts it again using config you provided at load.
+The `start()` starts it again using config you provided at initialization.
 
 ```java
 AppSpector.shared().start();
 ```
 
-**As the result new session session will be created and all activity between
+**As the result new session will be created and all activity between
 `stop()` and `start()` calls will not be tracked.**
 
 To check AppSpector state you can use `isStarted()` method.
@@ -193,7 +198,7 @@ AppSpector.shared().isStarted();
 ## Custom device name
 
 You can assign a custom name to your device to easily find needed sessions
-in the sessions list. To do this you have to add the desired name as a value
+in the sessions list. To do this you should add the desired name as a value
 for `AppSpector.METADATA_KEY_DEVICE_NAME` key to the `metadata` dictionary:
 
 ```java
