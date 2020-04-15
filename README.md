@@ -122,7 +122,7 @@ during the registration of your app using [desktop application](https://appspect
 (previously registered application can't be updated to support encryption).
 
 After that, you need to add the `android-sdk-encryption` module to your
-dependencies declaration. So, your app-level `build.gradle` will look like this:
+dependencies declaration. So, your app-level `build.gradle` should contain the next lines:
 
 ```groovy
 apply plugin: 'com.android.application'
