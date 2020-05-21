@@ -223,6 +223,38 @@ or the `removeMetadataValue` to remove your custom device name
 AppSpector.shared().removeMetadataValue(AppSpector.METADATA_KEY_DEVICE_NAME);
 ```
 
+## Support SQLCipher
+For browsing and running SQL queries in the SQLCipher database you need to perform a couple of additional steps.
+First of all, add the `sqlcipher-extension` module to your `app/build.gradle` file under the main sdk module. So, it'll look like that:
+
+```groovy
+dependencies {
+    implementation 'com.appspector:android-sdk:+'
+    implementation 'com.appspector:sqlcipher-extension::+'
+}
+```
+
+After that, create DatabaseConnectionFactory and pass it as an argument of the `addSQLMonitor` method. 
+Let's imagine your project contains SQLCipher database with "my_encrypted_db" name and other SQLite ones:
+
+```java
+AppSpector
+            .build(this)
+            .withDefaultMonitors()
+            .addSQLMonitor(new SQLiteMonitor.DatabaseConnectionFactory() {
+                @NonNull
+                @Override
+                public DatabaseConnection createDatabaseConnection(@NonNull Database database) {
+                    if ("my_encrypted_db".equals(database.name)) {
+                        return new SQLCipherDatabaseConnection(database, "password");
+                    }
+                    return new SQLiteDatabaseConnection(database);
+                }
+            })
+            .run("YOUR_API_KEY");
+```
+
+
 ## Filtering your data
 
 Sometimes you may want to adjust or completely skip some pieces of data AppSpector gather. We have a special feature called Sanitizing for this, for now it’s available only for HTTP and logs monitors, more coming. For these two monitors you can provide a filter which allows to modify or block events before AppSpector sends them to the backend. You can specify filters via `addHttpMonitor(HTTPFilter)` and `addLogMonitor(LogMonitor.Filter)` methods.
