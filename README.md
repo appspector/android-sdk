@@ -234,7 +234,8 @@ dependencies {
 }
 ```
 
-After that, create DatabaseConnectionFactory and pass it as an argument of the `addSQLMonitor` method. 
+After that, create DatabaseConnectionFactory and pass it as an argument of the `addSQLMonitor` method.
+
 Let's imagine your project contains SQLCipher database with "my_encrypted_db" name and other SQLite ones:
 
 ```java
@@ -256,10 +257,12 @@ AppSpector
 
 
 ## Filtering your data
+Sometimes you may want to adjust or completely skip some pieces of data AppSpector gather. 
 
-Sometimes you may want to adjust or completely skip some pieces of data AppSpector gather. We have a special feature called Sanitizing for this, for now it’s available only for HTTP and logs monitors, more coming. For these two monitors you can provide a filter which allows to modify or block events before AppSpector sends them to the backend. You can specify filters via `addHttpMonitor(HTTPFilter)` and `addLogMonitor(LogMonitor.Filter)` methods.
+### Filtering HTTP requests and responses
+For this aim, the HTTP monitor provides the interface `HTTPFilter` which can be pass to `addHttpMonitor(HTTPFilter)` method.
 
-Some examples. Let's say we want to skip our auth token from requests headers:
+Let's say we want to skip our auth token from requests headers. Here is a sample of this filter:
 ```java
 public class TokenFilter implements HTTPFilter {
     @Nullable
@@ -279,9 +282,38 @@ public class TokenFilter implements HTTPFilter {
 }
 ```
 
-And here, for example, we want to change a log level to WARN for all messages with word *token*:
+### Filtering SharedPreferences values and specifying files for observing
+The SharedPreferences monitor allows specifying files you want to observe by using `SharedPreferencesSourceFactory`.
+1. To observe all SharedPreferences files it provides `SharedPreferencesSourceFactory.all()` method. By default, the monitor uses this value.
+2. To ignore some files it provides `SharedPreferencesSourceFactory.excludeFiles("preferences_name")` method, where "preferences_name" is a name of ignored file. You may pass as many file names as you want.
+3. To observe only specified file it provides `SharedPreferencesSourceFactory.only("preferences_name")` method, where "preferences_name" is a name of file for observing. This method also receives as many argumens as you want. 
+
+In additinal, the monitor allows to provide `SharedPreferencesMonitor.Filter` for removing or modifying some values before sending data on client.
+
+Let's say you want to remove `key_1` and modify `key_2` preferences in the file `preferences_name`. So, your filter will look like that: 
 ```java
-public class LogFilter implements Filter {
+public class SimpleSharedPreferencesFilter implements SharedPreferencesMonitor.Filter {
+    @NonNull
+    @Override
+    public Map<String, PreferenceValue> filter(@NonNull String fileName, @NonNull Map<String, PreferenceValue> values) {
+        if (fileName.equals("preferences_name")) {
+            values.remove("key_1");
+            if (values.containsKey("key_2")) {
+                values.put("key_2", PreferenceValue.stringValue("modified value"));
+            }
+        }
+        return values;
+    }
+}
+```
+For applying these customizations, you need to use one of these methods: `addSharedPreferenceMonitor(SharedPreferencesMonitor.Filter)`, `addSharedPreferenceMonitor(SharedPreferencesSourceFactory)`, `addSharedPreferenceMonitor(SharedPreferencesSourceFactory, SharedPreferencesMonitor.Filter)`.
+
+### Filtering Logs
+To filter logs you need to implement `LogMonitor.Filter` and pass it to `addLogMonitor(LogMonitor.Filter)` method.
+
+Let's consider an example where we want to change a log level to WARN for all messages with word *token*:
+```java
+public class LogFilter implements LogMonitor.Filter {
   
     @Nullable
     @Override
@@ -293,13 +325,15 @@ public class LogFilter implements Filter {
     }
 }
 ```
-Let's provide them to monitors:
+### Applying filters
+Let's provide the created filtes to monitors:
 ```java
 AppSpector
             .build(this)
             .withDefaultMonitors()
-            .addLogMonitor(new LogFilter())
             .addHttpMonitor(new TokenFilter())
+            .addSharedPreferenceMonitor(new SimpleSharedPreferencesFilter()) 
+            .addLogMonitor(new LogFilter())
             .run("YOUR_API_KEY");
 ```
 
