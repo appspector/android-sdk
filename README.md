@@ -234,8 +234,8 @@ First of all, add the `sqlcipher-extension` module to your `app/build.gradle` fi
 
 ```groovy
 dependencies {
-    implementation 'com.appspector:android-sdk:+'
-    implementation 'com.appspector:sqlcipher-extension::+'
+    implementation 'com.appspector:android-sdk:1.+'
+    implementation 'com.appspector:sqlcipher-extension:1.+'
 }
 ```
 
