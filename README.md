@@ -13,7 +13,12 @@ Debugging doesn't have to be painful!
 * [Configure](#configure)
   * [SDK start/stop](#sdk-startstop)
   * [Custom device name](#custom-device-name)
+  * [Support SQLCipher](#support-sqlcipher)
   * [Filtering your data](#filtering-your-data)
+    * [Filtering HTTP requests and responses](#filtering-http-requests-and-responses)
+    * [Filtering SharedPreferences values and files](#filtering-sharedpreferences-values-and-files)
+    * [Filtering Logs](#filtering-logs)
+    * [Applying filters](#applying-filters)
   * [Getting session URL](#getting-session-url)
   * [Disable background data collection](#disable-background-data-collection)
   * [Using OkHttp interceptor instead of AppSpector Gradle Plugin](#using-okhttp-interceptor-instead-of-appspector-gradle-plugin)
@@ -282,7 +287,7 @@ public class TokenFilter implements HTTPFilter {
 }
 ```
 
-### Filtering SharedPreferences values and specifying files for observing
+### Filtering SharedPreferences values and files
 The SharedPreferences monitor allows specifying files you want to observe by using `SharedPreferencesSourceFactory`.
 1. To observe all SharedPreferences files it provides `SharedPreferencesSourceFactory.all()` method. By default, the monitor uses this value.
 2. To ignore some files it provides `SharedPreferencesSourceFactory.excludeFiles("preferences_name")` method, where "preferences_name" is a name of ignored file. You may pass as many file names as you want.
