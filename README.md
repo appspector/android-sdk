@@ -440,6 +440,44 @@ Provides access to the application internal folder. So, using this monitor you'r
 
 ![File System](images/fs-monitor.png)
 
+#### Custom Events monitor
+The monitor allows you to send any data that you want to see. 
+The SDK provides a simple API to send your events. Here is an example:
+
+```java
+CustomEventsSender.send(new MyCustomEvent())
+```
+
+In the example, the `MyCustomEvent` class implements the `CustomEventPayload` interface like here:
+
+```java
+public class MyCustomEvent implements CustomEventPayload {
+    @NonNull
+    @Override
+    public String getName() {
+        return "Custom Event";
+    }
+
+    @NonNull
+    @Override
+    public String getCategory() {
+        return "Application";
+    }
+
+    @NonNull
+    @Override
+    public Map<String, Object> getPayload() {
+        final  Map<String, Object> payload = new HashMap<>();
+        payload.put("sampleDate", new Date());
+        payload.put("sampleBool", false);
+        payload.put("sampleInt", 42);
+        payload.put("sampleString", "Test");
+        return payload;
+    }
+}
+```
+
+
 # Feedback
 Let us know what do you think or what would you like to be improved: [info@appspector.com](mailto:info@appspector.com).
 
