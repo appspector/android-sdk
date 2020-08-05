@@ -477,6 +477,42 @@ public class MyCustomEvent implements CustomEventPayload {
 }
 ```
 
+#### Commands Monitor
+The monitor provides an opportunity to trigger your code remotely from AppSpector dashboard. The triggered code should be wrapped in AppSpector's CommandCallback and registered to SDK. The command allows you to pass params to your code and declare the result type.
+
+Let's say you need to show the Toast with the specified text and return an int value.
+
+Here is the declaration of your command which requires a message argument and has an Integer result.
+
+```java
+@Command(value = "Show message", category = "Application")
+public class ShowToastCommand extends BaseCommand<Integer> {
+    @Argument(isRequired = true)
+    public String message;
+}
+```
+
+And here is the registration of your command and the implementation of CommandCallback.
+
+```java
+AppSpector.shared().commands().register(ShowToastCommand.class, new CommandCallback<Integer, ShowToastCommand>() {
+    @Override
+    public void exec(@NonNull final ShowToastCommand command, @NonNull final Responder<Integer> responder) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), command.message, Toast.LENGTH_SHORT).show();
+                responder.ok(42);
+            }
+        });
+    }
+});
+```
+
+This command will be appeared under the `Application` category and will have `Show message` name on the dashboard. You can use your own categories for grouping commands on the dashboard.
+
+__Commands can be registered only after running the SDK.__
+
 
 # Feedback
 Let us know what do you think or what would you like to be improved: [info@appspector.com](mailto:info@appspector.com).
