@@ -509,7 +509,7 @@ AppSpector.shared().commands().register(ShowToastCommand.class, new CommandCallb
 });
 ```
 
-This command will be appeared under the `Application` category and will have `Show message` name on the dashboard. You can use your own categories for grouping commands on the dashboard.
+This command will appear under the `Application` category and will have `Show message` name on the dashboard. You can use your own categories for grouping commands on the dashboard.
 
 __Commands can be registered only after running the SDK.__
 
