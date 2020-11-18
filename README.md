@@ -378,6 +378,61 @@ new OkHttpClient.Builder()
   .build()
 ```
 
+## Experimental support for URLConnection requests.
+At the current moment, the SDK provides API for manual setup in your codebase.
+To use it in the project, firstly, you need to add the `urlconnection-extension` gradle dependency:
+```groovy
+dependencies {
+    implementation 'com.appspector:android-sdk:1.+'
+    implementation 'com.appspector:urlconnection-extension:1.+'
+}
+```
+After that, replace the `url.openConnection()` calls with `UrlInstrument.openConnection(url)`. Let's say we have the method to get google page and we want to track this request:
+```java 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public void getGooglePage() {
+    HttpURLConnection connection = null;
+    try {
+        connection = (HttpURLConnection) new URL("https://google.com").openConnection();
+        if (connection.getResponseCode() == 200) {
+            //Read data from connection.inputStream
+        }
+    } catch (IOException ex) {
+        Log.d("UrlConnectionSample", "Request was failed", ex);
+    } finally {
+        if (connection != null) {
+            connection.disconnect();
+        }
+    }
+}
+```
+After integration of the SDK, it'll be looks like this one:
+```java
+import com.appspector.sdk.urlconnection.instrumentation.UrlInstrument;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public void getGooglePage() {
+    HttpURLConnection connection = null;
+    try {
+        connection = (HttpURLConnection) UrlInstrument.openConnection(new URL("https://google.com"));
+        if (connection.getResponseCode() == 200) {
+            //Read data from connection.inputStream
+        }
+    } catch (IOException ex) {
+        Log.d("UrlConnectionSample", "Request was failed", ex);
+    } finally {
+        if (connection != null) {
+            connection.disconnect();
+        }
+    }
+}
+```
+And that's it!
+**Note:** Calling the `disconnect` method is important for us. It's a marker that the request was completed.
+
 ## Logger integration with Timber
 If Timber has been integrated into your project you can easily use it with AppSpector:
 ```java
