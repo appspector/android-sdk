@@ -22,6 +22,7 @@ Debugging doesn't have to be painful!
   * [Getting session URL](#getting-session-url)
   * [Disable background data collection](#disable-background-data-collection)
   * [Using OkHttp interceptor instead of AppSpector Gradle Plugin](#using-okhttp-interceptor-instead-of-appspector-gradle-plugin)
+  * [Experimental support for URLConnection requests](#experimental-support-for-urlconnection-requests)
 * [Features](#features)
 
 # Installation
@@ -378,7 +379,7 @@ new OkHttpClient.Builder()
   .build()
 ```
 
-## Experimental support for URLConnection requests.
+## Experimental support for URLConnection requests
 At the current moment, the SDK provides API for manual setup in your codebase.
 To use it in the project, firstly, you need to add the `urlconnection-extension` gradle dependency:
 ```groovy
