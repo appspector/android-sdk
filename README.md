@@ -36,26 +36,9 @@ After adding the application navigate to app settings and copy API key.
 <!-- integration-manual-start -->
 [![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk/releases)
 
-#### Add AppSpector dependency to buildscript in your project-level build.gradle
-```groovy
-buildscript {
-  repositories {
-      jcenter()
-      google()
-      maven { url "https://maven.appspector.com/artifactory/android-sdk" }
-  }
-  
-  dependencies {
-      classpath "com.appspector:android-sdk-plugin:1.+"
-  }
-}
-```
-
 #### Modify your app-level build.gradle
 ```groovy
 apply plugin: 'com.android.application'
-// Put AppSpector plugin after Android plugin
-apply plugin: 'com.appspector.sdk'
 
 // Add AppSpector maven repository
 repositories {
@@ -132,8 +115,6 @@ dependencies declaration. So, your app-level `build.gradle` should contain the n
 
 ```groovy
 apply plugin: 'com.android.application'
-// Put AppSpector plugin after Android plugin
-apply plugin: 'com.appspector.sdk'
 
 // Add AppSpector maven repository
 repositories {
@@ -370,7 +351,7 @@ AppSpector
 ```
 
 ## Using OkHttp interceptor instead of AppSpector Gradle Plugin
-If you don't want to use AppSpector Gradle Plugin you could use an alternative way to intercept HTTP requests and responses. You can manually add `AppSpectorOkHttp3Interceptor` to your OkHttpClient (Or `AppSpectorOkHttp2Interceptor` for old version of OkHttpClient). Also, **don't forget** to remove AppSpector plugin from your `app/build.gradle` file.
+If you don't want to use AppSpector Gradle Plugin you could use an alternative way to intercept HTTP requests and responses. You can manually add `AppSpectorOkHttp3Interceptor` to your OkHttpClient (Or `AppSpectorOkHttp2Interceptor` for old version of OkHttpClient). Also, **don't forget** to remove AppSpector plugin from your `app/build.gradle` file if the plugin is added.
 
 ```java
 new OkHttpClient.Builder()
