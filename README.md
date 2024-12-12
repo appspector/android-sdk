@@ -37,7 +37,7 @@ After adding the application navigate to app settings and copy API key.
 [![GitHub release](https://img.shields.io/github/release/appspector/android-sdk.svg)](https://github.com/appspector/android-sdk/releases)
 
 #### Modify your app-level build.gradle
-```groovy
+```kotlin
 apply plugin: 'com.android.application'
 
 // Add AppSpector maven repository
@@ -53,8 +53,10 @@ dependencies {
 In case when you don't want to have AppSpector SDK in your release APK use AppSpector NO-OP artifact
 ```groovy
 dependencies {
-    debugImplementation "com.appspector:android-sdk:1.+"
-    releaseImplementation "com.appspector:android-sdk-noop:1.+"
+    debugImplementation "com.appspector:android-sdk:1.6.+"
+    releaseImplementation("com.appspector:android-sdk:1.6.+") {
+      exclude group: 'com.appspector', module: 'android-core'
+    }
 }
 ```
 <!-- integration-manual-end -->
@@ -84,11 +86,13 @@ public class AmazingApp extends Application {
       AppSpector
             .build(this)
             .addPerformanceMonitor()
-            .addHttpMonitor()
-            // If specific monitor is not added then this kind of data won't be tracked and available on the web
             .addLogMonitor()
+            // Next line disables added monitor above. In our case, Log and Performace monitors.
+            .disableProvidedMonitors() // Disabled monitors can be enabled from Dashboard.
+            .addHttpMonitor()
             .addScreenshotMonitor()
             .addSQLMonitor()
+            // Monitors that were not added to config will be ignored till declared here.
             .run("API_KEY");
    }
 
@@ -158,19 +162,19 @@ your session in the AppSpector client.
 Since we recommend to keep SDK initialization in the `onCreate()` method
 of your [Application](https://developer.android.com/reference/android/app/Application),
 the SDK provides methods to help you control AppSpector state by
-calling `stop()` and `start()` methods.
+calling `stopSdk()` and `startSdk()` static methods.
 **You are able to use these methods only after AppSpector was initialized.**
 
 The `stop()` tells AppSpector to disable all data collection and close current session.
 
 ```java
-AppSpector.shared().stop();
+AppSpector.stopSdk();
 ```
 
-The `start()` starts it again using config you provided at initialization.
+The `startSdk()` starts it again using config you provided at initialization.
 
 ```java
-AppSpector.shared().start();
+AppSpector.startSdk();
 ```
 
 **As the result new session will be created and all activity between
