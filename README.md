@@ -10,7 +10,7 @@ Debugging doesn't have to be painful!
   * [Initialize AppSpector](#initialize-appspector-sdk)
   * [Use End-To-End Encryption to protect your data](#use-end-to-end-encryption-to-protect-your-data)
   * [Build and Run](#build-and-run)
-* [Upgrading the AppSpector SDK from older versions](upgrading-the-appspector-sdk-from-older-versions)
+* [Upgrading the AppSpector SDK from older versions](#upgrading-the-appspector-sdk-from-older-versions)
 * [Configure](#configure)
   * [SDK start/stop](#sdk-startstop)
   * [Custom device name](#custom-device-name)
