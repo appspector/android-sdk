@@ -10,6 +10,7 @@ Debugging doesn't have to be painful!
   * [Initialize AppSpector](#initialize-appspector-sdk)
   * [Use End-To-End Encryption to protect your data](#use-end-to-end-encryption-to-protect-your-data)
   * [Build and Run](#build-and-run)
+* [Upgrading the AppSpector SDK from older versions](upgrading-the-appspector-sdk-from-older-versions)
 * [Configure](#configure)
   * [SDK start/stop](#sdk-startstop)
   * [Custom device name](#custom-device-name)
@@ -21,8 +22,7 @@ Debugging doesn't have to be painful!
     * [Applying filters](#applying-filters)
   * [Getting session URL](#getting-session-url)
   * [Disable background data collection](#disable-background-data-collection)
-  * [Using OkHttp interceptor instead of AppSpector Gradle Plugin](#using-okhttp-interceptor-instead-of-appspector-gradle-plugin)
-  * [Experimental support for URLConnection requests](#experimental-support-for-urlconnection-requests)
+  * [Network Monitor configuration](#network-monitor-configuration)
 * [Features](#features)
 
 # Installation
@@ -60,6 +60,7 @@ dependencies {
 }
 ```
 <!-- integration-manual-end -->
+
 
 ## Initialize AppSpector SDK
 <!-- initialization-manual-start -->
@@ -149,6 +150,87 @@ AppSpector
 ## Build and Run
 
 Build your project and see everything work! When your app is up and running you can go to [https://app.appspector.com](https://app.appspector.com?utm_source=android_readme) and connect to your application session.
+
+
+# Upgrading the AppSpector SDK from older versions
+
+<!--upgrade-manual-start -->
+
+**Important:** Old SDK versions (pre v1.5.0) included a Gradle Plugin which is no longer available. Please follow these steps to migrate your project to the new integration method:
+
+### Step 1: Remove the plugin from your app-level `build.gradle` file
+
+**For Groovy DSL (`build.gradle`):**
+```groovy
+apply plugin: 'com.android.application'
+// TODO: Remove the next line
+apply plugin: 'com.appspector.sdk'
+```
+
+**For Kotlin DSL (`build.gradle.kts`):**
+```kotlin
+plugins {
+    id("com.android.application")
+    // TODO: Remove the next line
+    id("com.appspector.sdk")
+}
+```
+
+### Step 2: Clean up your project-level `build.gradle` file
+
+Remove the AppSpector plugin from your project-level build file:
+
+**For Groovy DSL (`build.gradle`):**
+```groovy
+buildscript {
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.0'
+        // TODO: Remove the next line
+        classpath 'com.appspector:android-sdk-plugin:1.4.0'
+    }
+}
+```
+
+**For Kotlin DSL (`build.gradle.kts`):**
+```kotlin
+buildscript {
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.0.0")
+        // TODO: Remove the next line
+        classpath("com.appspector:android-sdk-plugin:1.4.0")
+    }
+}
+```
+
+### Step 3: Add the new dependency
+
+Add the AppSpector SDK as a regular dependency in your app-level `build.gradle` file:
+
+**For Groovy DSL (`build.gradle`):**
+```groovy
+dependencies {
+    implementation 'com.appspector.android:appspector:1.6.0'
+}
+```
+
+**For Kotlin DSL (`build.gradle.kts`):**
+```kotlin
+dependencies {
+    implementation("com.appspector.android:appspector:1.6.0")
+}
+```
+
+### Step 4: Update monitor configuration
+
+Since the plugin handled network monitoring automatically, you now need to manually configure network monitors. See the [Network Monitor configuration](#network-monitor-configuration) section below for details on setting up OkHttp interceptors or URLConnection instrumentation.
+
+### Step 5: Clean and rebuild
+
+After making these changes:
+1. Clean your project: `./gradlew clean`
+2. Rebuild your project: `./gradlew build`
+
+<!--upgrade-manual-end -->
 
 
 # Configure
@@ -354,26 +436,37 @@ AppSpector
         .run("YOUR_API_KEY");
 ```
 
-## Using OkHttp interceptor instead of AppSpector Gradle Plugin
-If you don't want to use AppSpector Gradle Plugin you could use an alternative way to intercept HTTP requests and responses. You can manually add `AppSpectorOkHttp3Interceptor` to your OkHttpClient (Or `AppSpectorOkHttp2Interceptor` for old version of OkHttpClient). Also, **don't forget** to remove AppSpector plugin from your `app/build.gradle` file if the plugin is added.
+
+## Network Monitor configuration
+
+<!-- network-monitor-config-start -->
+### Using OkHttp interceptor for network monitoring
+
+You can manually add `AppSpectorOkHttp3Interceptor` to your OkHttpClient (or `AppSpectorOkHttp2Interceptor` for older versions of OkHttpClient) to intercept HTTP requests and responses:
 
 ```java
 new OkHttpClient.Builder()
-  .addInterceptor(new AuthenticationInterceptor()) // for example, it adds auth token to you request
+  .addInterceptor(new AuthenticationInterceptor()) // for example, it adds auth token to your request
   .addInterceptor(new AppSpectorOkHttp3Interceptor()) // it will track your requests and responses
   .build()
 ```
 
-## Experimental support for URLConnection requests
-At the current moment, the SDK provides API for manual setup in your codebase.
-To use it in the project, firstly, you need to add the `urlconnection-extension` gradle dependency:
+### Experimental support for URLConnection requests
+
+The SDK provides API for manual setup in your codebase for URLConnection requests.
+
+To use it in the project, first add the `urlconnection-extension` dependency:
+
 ```groovy
 dependencies {
     implementation 'com.appspector:android-sdk:1.+'
     implementation 'com.appspector:urlconnection-extension:1.+'
 }
 ```
-After that, replace the `url.openConnection()` calls with `UrlInstrument.openConnection(url)`. Let's say we have the method to get google page and we want to track this request:
+
+After that, replace the `url.openConnection()` calls with `UrlInstrument.openConnection(url)`. Let's say we have a method to get google page and we want to track this request:
+
+**Before:**
 ```java 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -394,7 +487,8 @@ public void getGooglePage() {
     }
 }
 ```
-After integration of the SDK, it'll be looks like this one:
+
+**After integration:**
 ```java
 import com.appspector.sdk.urlconnection.instrumentation.UrlInstrument;
 import java.net.HttpURLConnection;
@@ -416,8 +510,10 @@ public void getGooglePage() {
     }
 }
 ```
-And that's it!
+
 **Note:** Calling the `disconnect` method is important for us. It's a marker that the request was completed.
+<!-- network-monitor-config-start -->
+
 
 ## Logger integration with Timber
 If Timber has been integrated into your project you can easily use it with AppSpector:
