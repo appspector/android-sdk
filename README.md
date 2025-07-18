@@ -209,14 +209,14 @@ Add the AppSpector SDK as a regular dependency in your app-level `build.gradle` 
 **For Groovy DSL (`build.gradle`):**
 ```groovy
 dependencies {
-    implementation 'com.appspector.android:appspector:1.6.0'
+    implementation 'com.appspector:android-sdk:1.6.0'
 }
 ```
 
 **For Kotlin DSL (`build.gradle.kts`):**
 ```kotlin
 dependencies {
-    implementation("com.appspector.android:appspector:1.6.0")
+    implementation("com.appspector:android-sdk:1.6.0")
 }
 ```
 
